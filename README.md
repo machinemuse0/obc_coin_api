@@ -125,6 +125,8 @@ server:
 
 ## 启动服务
 
+### 方式一：使用一键脚本（推荐）
+
 ```bash
 # 克隆项目
 git clone <repository-url>
@@ -134,10 +136,41 @@ cd obc_coin_api
 go mod tidy
 
 # 启动服务
+./start.sh
+
+# 查看状态
+./status.sh
+
+# 停止服务
+./stop.sh
+
+# 重启服务
+./restart.sh
+```
+
+### 方式二：手动启动
+
+```bash
+# 直接运行
 go run .
 ```
 
 服务启动后将在 `localhost:8080` 监听请求。
+
+## 服务管理脚本
+
+项目提供了完整的服务管理脚本：
+
+- `./start.sh` - 启动服务（后台运行）
+- `./stop.sh` - 停止服务
+- `./restart.sh` - 重启服务
+- `./status.sh` - 查看服务状态
+
+**脚本特性：**
+- 🔄 自动进程管理和 PID 文件处理
+- 📝 日志文件自动生成（`obc_coin_api.log`）
+- 🏥 健康检查和状态监控
+- 🛡️ 安全的启停流程
 
 ## 错误处理
 
