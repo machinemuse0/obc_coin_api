@@ -1,0 +1,20 @@
+# 应用配置文件
+server:
+  port: 8080
+  host: localhost
+
+# 代币模板路径配置
+coin_template_path: "/Users/mofei/work/obc/obc/bridge/move/tokens/coin_tmp"
+
+# 数据库配置（预留）
+database:
+  host: localhost
+  port: 5432
+  name: obc_coin_db
+  user: postgres
+  password: ""
+
+# 日志配置
+log:
+  level: info
+  file: "./logs/app.log"
