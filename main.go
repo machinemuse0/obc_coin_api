@@ -36,7 +36,8 @@ func main() {
 	// 设置路由
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/token", func(r chi.Router) {
-			r.Post("/add", addToken)
+			// 为 /add 路由添加限流中间件
+			r.With(TokenAddRateLimitMiddleware).Post("/add", addToken)
 			r.Post("/publish", publishToken)
 		})
 	})
