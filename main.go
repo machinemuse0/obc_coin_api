@@ -50,5 +50,9 @@ func main() {
 	log.Printf("Benfen RPC URL: %s", GetBenfenRPCURL())
 	log.Printf("Benfen RPC 超时: %d 秒", GetBenfenRPCTimeout())
 	log.Printf("Benfen RPC 重试次数: %d", GetBenfenRPCRetryCount())
+	
+	// 启动定时清理任务
+	startCleanupScheduler()
+	
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", AppConfig.Server.Port), r))
 }

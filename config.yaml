@@ -25,6 +25,13 @@ database:
   user: postgres
   password: ""
 
+# 清理任务配置
+cleanup:
+  # 清理任务执行间隔（分钟）
+  interval_minutes: 10
+  # 目录保留时间（分钟）
+  retention_minutes: 10
+
 # 日志配置
 log:
   level: info

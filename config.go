@@ -30,6 +30,10 @@ type Config struct {
 		User     string `yaml:"user"`
 		Password string `yaml:"password"`
 	} `yaml:"database"`
+	Cleanup struct {
+		IntervalMinutes  int `yaml:"interval_minutes"`
+		RetentionMinutes int `yaml:"retention_minutes"`
+	} `yaml:"cleanup"`
 	Log struct {
 		Level string `yaml:"level"`
 		File  string `yaml:"file"`
@@ -110,5 +114,21 @@ func GetBenfenRPCRetryCount() int {
 	if AppConfig != nil {
 		return AppConfig.BenfenRPC.RetryCount
 	}
-	return 3 // 默认值
+	return 3 // 默认重试3次
+}
+
+// GetCleanupIntervalMinutes 获取清理任务执行间隔（分钟）
+func GetCleanupIntervalMinutes() int {
+	if AppConfig != nil {
+		return AppConfig.Cleanup.IntervalMinutes
+	}
+	return 10 // 默认10分钟
+}
+
+// GetCleanupRetentionMinutes 获取目录保留时间（分钟）
+func GetCleanupRetentionMinutes() int {
+	if AppConfig != nil {
+		return AppConfig.Cleanup.RetentionMinutes
+	}
+	return 10 // 默认保留10分钟
 }
