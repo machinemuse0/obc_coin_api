@@ -14,6 +14,15 @@ type Config struct {
 		Host string `yaml:"host"`
 	} `yaml:"server"`
 	CoinTemplatePath string `yaml:"coin_template_path"`
+	BFC              struct {
+		Directory  string `yaml:"directory"`
+		BinaryPath string `yaml:"binary_path"`
+	} `yaml:"bfc"`
+	BenfenRPC struct {
+		URL        string `yaml:"url"`
+		Timeout    int    `yaml:"timeout"`
+		RetryCount int    `yaml:"retry_count"`
+	} `yaml:"benfen_rpc"`
 	Database struct {
 		Host     string `yaml:"host"`
 		Port     int    `yaml:"port"`
@@ -62,4 +71,44 @@ func GetServerAddress() string {
 		return fmt.Sprintf("%s:%d", AppConfig.Server.Host, AppConfig.Server.Port)
 	}
 	return "localhost:8080" // 默认值
+}
+
+// GetBFCDirectory 获取 BFC 目录路径
+func GetBFCDirectory() string {
+	if AppConfig != nil {
+		return AppConfig.BFC.Directory
+	}
+	return "/usr/local/bfc" // 默认值
+}
+
+// GetBFCBinaryPath 获取 BFC 二进制文件路径
+func GetBFCBinaryPath() string {
+	if AppConfig != nil {
+		return AppConfig.BFC.BinaryPath
+	}
+	return "/usr/local/bfc/bfc" // 默认值
+}
+
+// GetBenfenRPCURL 获取 Benfen RPC URL
+func GetBenfenRPCURL() string {
+	if AppConfig != nil {
+		return AppConfig.BenfenRPC.URL
+	}
+	return "https://rpc.benfen.org" // 默认值
+}
+
+// GetBenfenRPCTimeout 获取 Benfen RPC 超时时间
+func GetBenfenRPCTimeout() int {
+	if AppConfig != nil {
+		return AppConfig.BenfenRPC.Timeout
+	}
+	return 30 // 默认值
+}
+
+// GetBenfenRPCRetryCount 获取 Benfen RPC 重试次数
+func GetBenfenRPCRetryCount() int {
+	if AppConfig != nil {
+		return AppConfig.BenfenRPC.RetryCount
+	}
+	return 3 // 默认值
 }
