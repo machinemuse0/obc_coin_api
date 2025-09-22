@@ -99,18 +99,56 @@ func addToken(w http.ResponseWriter, r *http.Request) {
 	// 打印编译输出
 	fmt.Printf("编译输出:\n%s\n", compileOutput)
 
+	// 解析编译输出
+	modules, dependencies, err := parseCompileOutput(compileOutput)
+	if err != nil {
+		response := TokenResponse{
+			Success: false,
+			Message: fmt.Sprintf("解析编译输出失败: %v", err),
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	response := TokenResponse{
 		Success: true,
 		Message: "代币添加和编译成功",
 		Data: map[string]interface{}{
-			"request":        req,
-			"output_file":    outputFile,
+			"request": req,
+			// "output_file":    outputFile,
 			"compile_output": compileOutput,
+			"modules":        modules,
+			"dependencies":   dependencies,
 		},
 	}
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
+}
+
+func parseCompileOutput(compileOutput string) ([]string, []string, error) {
+	// 查找JSON开始的位置（第一个{）
+	start := strings.Index(compileOutput, "{")
+	if start == -1 {
+		return nil, nil, fmt.Errorf("无法在编译输出中找到JSON数据")
+	}
+
+	// 提取JSON部分
+	jsonStr := compileOutput[start:]
+
+	// 解析JSON
+	var result struct {
+		Modules      []string `json:"modules"`
+		Dependencies []string `json:"dependencies"`
+		Digest       []int    `json:"digest"`
+	}
+
+	if err := json.Unmarshal([]byte(jsonStr), &result); err != nil {
+		return nil, nil, fmt.Errorf("解析JSON失败: %v", err)
+	}
+
+	return result.Modules, result.Dependencies, nil
 }
 
 // processTemplate 处理模板文件替换
