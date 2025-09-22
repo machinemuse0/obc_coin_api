@@ -6,7 +6,7 @@
 echo "=== OBC Coin API 清理功能测试 ==="
 
 # 获取模板目录的父目录
-TEMPLATE_DIR="/Users/chengsuoyuan/work/project/rust/obc/obc/bridge/move/tokens/coin_tmp"
+TEMPLATE_DIR="/Users/mofei/work/obc/obc/bridge/move/tokens/coin_tmp"
 PARENT_DIR=$(dirname "$TEMPLATE_DIR")
 
 echo "模板目录: $TEMPLATE_DIR"

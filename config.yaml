@@ -4,16 +4,16 @@ server:
   host: localhost
 
 # 代币模板路径配置
-coin_template_path: "/Users/chengsuoyuan/work/project/rust/obc/obc/bridge/move/tokens/coin_tmp"
+coin_template_path: "/Users/mofei/work/obc/obc/bridge/move/tokens/coin_tmp"
 
 # BFC 目录配置
 bfc:
-  directory: "/Users/chengsuoyuan/work/project/go/obc_coin_api"
-  binary_path: "/Users/chengsuoyuan/work/project/rust/obc/obc/target/debug/bfc"
+  directory: "/Users/mofei/work/obc/obc"
+  binary_path: "/Users/mofei/work/obc/obc/target/debug/bfc"
 
 # Benfen RPC 配置
 benfen_rpc:
-  url: "http://localhost:9000/"
+  url: "https://devrpc2.benfen.org/"
   timeout: 30
   retry_count: 3
 
