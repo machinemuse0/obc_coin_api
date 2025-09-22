@@ -58,6 +58,17 @@ func addToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 校验 Decimal 不大于 18
+	if req.Decimal > 18 {
+		response := TokenResponse{
+			Success: false,
+			Message: "Decimal 不能大于 18",
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	// 处理模板文件替换
 	outputFile, err := processTemplate(req)
 	if err != nil {
@@ -144,6 +155,7 @@ func processTemplate(req TokenRequest) (string, error) {
 	// 处理 JSONTMP - 直接使用 custom_info 字段（它本身就是 JSON 字符串）
 	// 对 custom_info 中的双引号进行转义
 	customInfoEscaped := strings.ReplaceAll(req.CustomInfo, "\"", "\\\"")
+	fmt.Println("customInfoEscaped:", customInfoEscaped)
 	content = strings.ReplaceAll(content, "JSONTMP", customInfoEscaped)
 
 	// 生成输出文件路径（在复制的目录中）
