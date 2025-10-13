@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // TokenRequest 定义添加代币的请求结构
@@ -29,6 +30,23 @@ type TokenResponse struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
+}
+
+// validateField 验证字段是否包含特殊字符和长度限制
+func validateField(field, fieldName string) error {
+	// 检查长度限制
+	if len(field) > 20 {
+		return fmt.Errorf("%s 长度不能超过20个字符", fieldName)
+	}
+	
+	// 检查是否包含空格、回车、制表符等特殊字符
+	for _, char := range field {
+		if unicode.IsSpace(char) {
+			return fmt.Errorf("%s 不能包含空格、回车、制表符等特殊字符", fieldName)
+		}
+	}
+	
+	return nil
 }
 
 // addToken 处理添加代币的请求
@@ -58,11 +76,33 @@ func addToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 校验 Decimal 不大于 18
-	if req.Decimal > 18 {
+	// 验证 Symbol 字段
+	if err := validateField(req.Symbol, "Symbol"); err != nil {
 		response := TokenResponse{
 			Success: false,
-			Message: "Decimal 不能大于 18",
+			Message: err.Error(),
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// 验证 Name 字段
+	if err := validateField(req.Name, "Name"); err != nil {
+		response := TokenResponse{
+			Success: false,
+			Message: err.Error(),
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// 校验 Decimal 不大于 1
+	if req.Decimal > 10 {
+		response := TokenResponse{
+			Success: false,
+			Message: "Decimal 不能大于 10",
 		}
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
