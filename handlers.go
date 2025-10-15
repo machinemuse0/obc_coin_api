@@ -352,6 +352,7 @@ type PublishRequest struct {
 	Sender          string        `json:"sender"`
 	CompiledModules []interface{} `json:"compiled_modules"`
 	Dependencies    []interface{} `json:"dependencies"`
+	Gas             string        `json:"gas_price,omitempty"`
 	GasBudget       string        `json:"gas_budget"`
 }
 
@@ -376,7 +377,7 @@ func publishToken(w http.ResponseWriter, r *http.Request) {
 		"jsonrpc": "2.0",
 		"id":      "1",
 		"method":  "unsafe_publish",
-		"params":  []interface{}{req.Sender, req.CompiledModules, req.Dependencies, nil, req.GasBudget},
+		"params":  []interface{}{req.Sender, req.CompiledModules, req.Dependencies, req.Gas, req.GasBudget},
 	}
 
 	// 序列化请求体
