@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"io"
 	"net/http"
 	"os"
@@ -137,7 +138,7 @@ func addToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 打印编译输出
-	fmt.Printf("编译输出:\n%s\n", compileOutput)
+	log.Printf("编译输出:\n%s\n", compileOutput)
 
 	// 解析编译输出
 	modules, dependencies, err := parseCompileOutput(compileOutput)
@@ -260,6 +261,7 @@ func compileMoveProject(projectDir string) (string, error) {
 	// 执行命令并获取输出
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+	    log.Fatalf("编译命令输出: %s, %v", string(output), err)
 		return "", fmt.Errorf("编译失败: %v, 输出: %s", err, string(output))
 	}
 
@@ -352,6 +354,7 @@ type PublishRequest struct {
 	Sender          string        `json:"sender"`
 	CompiledModules []interface{} `json:"compiled_modules"`
 	Dependencies    []interface{} `json:"dependencies"`
+	Gas             string        `json:"gas,omitempty"`
 	GasBudget       string        `json:"gas_budget"`
 }
 
@@ -376,7 +379,7 @@ func publishToken(w http.ResponseWriter, r *http.Request) {
 		"jsonrpc": "2.0",
 		"id":      "1",
 		"method":  "unsafe_publish",
-		"params":  []interface{}{req.Sender, req.CompiledModules, req.Dependencies, nil, req.GasBudget},
+		"params":  []interface{}{req.Sender, req.CompiledModules, req.Dependencies, req.Gas, req.GasBudget},
 	}
 
 	// 序列化请求体
